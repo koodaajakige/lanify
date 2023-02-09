@@ -1,4 +1,5 @@
-  <?php
+<?php
+
   // Aloitetaan istunnot.
   session_start();
 
@@ -12,17 +13,17 @@
   } else {
     $loggeduser = NULL;
   }
-  
+
+
   // Siistitään polku urlin alusta ja mahdolliset parametrit urlin lopusta.
   // Siistimisen jälkeen osoite /~knykanen/lanify/tapahtuma?id=1 on 
   // lyhentynyt muotoon /tapahtuma.
   $request = str_replace($config['urls']['baseUrl'],'',$_SERVER['REQUEST_URI']);
-
   $request = strtok($request, '?');
 
   // Luodaan uusi Plates-olio ja kytketään se sovelluksen sivupohjiin.
-  $templates = new League\Plates\Engine(TEMPLATE_DIR);
-
+  $templates = new League\Plates\Engine(TEMPLATE_DIR); 
+  
   // Selvitetään mitä sivua on kutsuttu ja suoritetaan sivua vastaava
   // käsittelijä.
   switch ($request) {
@@ -43,8 +44,8 @@
           $ilmoittautuminen = NULL;
         }
         echo $templates->render('tapahtuma',['tapahtuma' => $tapahtuma,
-                                              'ilmoittautuminen' => $ilmoittautuminen,
-                                              'loggeduser' => $loggeduser]);
+                                             'ilmoittautuminen' => $ilmoittautuminen,
+                                             'loggeduser' => $loggeduser]);
       } else {
         echo $templates->render('tapahtumanotfound');
       }
@@ -63,7 +64,7 @@
       } else {
         echo $templates->render('lisaa_tili', ['formdata' => [], 'error' => []]);
         break;
-      } 
+      }
     case "/kirjaudu":
       if (isset($_POST['laheta'])) {
         require_once CONTROLLER_DIR . 'kirjaudu.php';
@@ -72,16 +73,40 @@
           $_SESSION['user'] = $_POST['email'];
           header("Location: " . $config['urls']['baseUrl']);
         } else {
-        echo $templates->render('kirjaudu', [ 'error' => ['virhe' => 'Väärä käyttäjätunnus tai salasana!']]);
+          echo $templates->render('kirjaudu', [ 'error' => ['virhe' => 'Väärä käyttäjätunnus tai salasana!']]);
+        }
+      } else {
+        echo $templates->render('kirjaudu', [ 'error' => []]);
       }
-    } else {
-      echo $templates->render('kirjaudu', [ 'error' => []]);
-    }
-    break;
+      break;
     case "/logout":
       require_once CONTROLLER_DIR . 'kirjaudu.php';
       logout();
       header("Location: " . $config['urls']['baseUrl']);
+      break;
+    case '/ilmoittaudu':
+      if ($_GET['id']) {
+        require_once MODEL_DIR . 'ilmoittautuminen.php';
+        $idtapahtuma = $_GET['id'];
+        if ($loggeduser) {
+          lisaaIlmoittautuminen($loggeduser['idhenkilo'],$idtapahtuma);
+        }
+        header("Location: tapahtuma?id=$idtapahtuma");
+      } else {
+        header("Location: tapahtumat");
+      }
+      break;
+    case '/peru':
+      if ($_GET['id']) {
+        require_once MODEL_DIR . 'ilmoittautuminen.php';
+        $idtapahtuma = $_GET['id'];
+        if ($loggeduser) {
+          poistaIlmoittautuminen($loggeduser['idhenkilo'],$idtapahtuma);
+        }
+        header("Location: tapahtuma?id=$idtapahtuma");
+      } else {
+        header("Location: tapahtumat");  
+      }
       break;
     default:
       echo $templates->render('notfound');
