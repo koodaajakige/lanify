@@ -115,19 +115,32 @@
         header("Location: tapahtumat");  
       }
       break;
-      case "/vahvista":
-        if (isset($_GET['key'])) {
-          $key = $_GET['key'];
-          require_once MODEL_DIR . 'henkilo.php';
-          if (vahvistaTili($key)) {
-            echo $templates->render('tili_aktivoitu');
-          } else {
-            echo $templates->render('tili_aktivointi_virhe');
-          }
+    case "/vahvista":
+      if (isset($_GET['key'])) {
+        $key = $_GET['key'];
+        require_once MODEL_DIR . 'henkilo.php';
+        if (vahvistaTili($key)) {
+          echo $templates->render('tili_aktivoitu');
         } else {
-          header("Location: " . $config['urls']['baseUrl']);
+          echo $templates->render('tili_aktivointi_virhe');
         }
-        break;
+      } else {
+        header("Location: " . $config['urls']['baseUrl']);
+      }
+      break;
+    case "/tilaa_vaihtoavain":
+      $formdata = cleanArrayData($_POST);
+      // Tarkistetaan, onko lomakkeelta lähetetty tietoa.
+      if (isset($formdata['laheta'])) {    
+  
+        // TODO vaihtoavaimen tilauskäsittely
+  
+      } else {
+        // Lomakeelta ei ole lähetetty tietoa, tulostetaan lomake.
+        echo $templates->render('tilaa_vaihtoavain_lomake');
+      }
+      break;
+    
   
     default:
       echo $templates->render('notfound');
