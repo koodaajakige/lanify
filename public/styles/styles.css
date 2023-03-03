@@ -30,7 +30,6 @@
     font-size: 0.8rem;
   }
   
-
   header h1 {
     font-size: 3rem;
     font-weight: normal;
@@ -40,6 +39,26 @@
   header a {
     color: #000;
     text-decoration: none;
+  }
+
+  nav {
+    background-color: #333;
+    display: flex;
+    padding: 0.5em 1em;
+  }
+
+  nav a {
+    color: #ccc;
+    text-decoration: none;
+    margin-right: 1em;
+  }
+
+  nav a:hover {
+    color: #fff;
+  }
+
+  nav a img {
+    height: 1em;
   }
 
   section {

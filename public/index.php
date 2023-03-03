@@ -207,7 +207,10 @@
         echo $templates->render('reset_lomake', ['error' => '']);
         break;
       }
-
+      break;
+    
+    case "/yhteystiedot":
+      echo $templates->render('yhteystiedot');
       break;
 
     default:

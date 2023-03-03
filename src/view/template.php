@@ -19,6 +19,10 @@
         ?>
       </div>
     </header>
+    <nav>
+      <div><a href="<?=BASEURL?>"><img src="<?=BASEURL."/images/home.png"?>" alt="Etusivu"></a></div>
+      <div><a href="<?=BASEURL."/yhteystiedot"?>">Yhteystiedot</a></div>     
+    </nav>
     <section>
       <?=$this->section('content')?>
     </section>
